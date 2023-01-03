@@ -33,9 +33,9 @@ RUN apt-get update                  && \
     apt-get install -y curl gcc g++ && \
     mkdir /boost                    && \
     cd /boost                       && \
-    curl -L https://dl.bintray.com/boostorg/release/1.70.0/source/boost_1_70_0.tar.gz --output boost_1_70_0.tar.gz && \
-    tar -xzf boost_1_70_0.tar.gz    && \
-    cd /boost/boost_1_70_0          && \
+    curl -L https://boostorg.jfrog.io/artifactory/main/release/1.81.0/source/boost_1_81_0.tar.gz --output boost_1_81_0.tar.gz && \
+    tar -xzf boost_1_81_0.tar.gz    && \
+    cd /boost/boost_1_81_0          && \
     ./bootstrap.sh                  && \
     ./b2 install -d0 --without-wave --without-python && \
     cd /                            && \
