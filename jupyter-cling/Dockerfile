@@ -1,41 +1,28 @@
 #
 # create a cling-jupyter notebook service
-# 
+#
 # for more information, see these sources:
 # https://blog.jupyter.org/interactive-workflows-for-c-with-jupyter-fe9b54227d92
 # https://docs.anaconda.com/anaconda/user-guide/tasks/integration/docker
 # https://github.com/QuantStack/xeus-cling
 #
-# This file partially replicates the continuumio/miniconda3 Dockerfile
-# in order to have the latest version if debian included without waiting
-# for the miniconda3 docker image to update.
-# 
+#
 
-# start of continuumio/miniconda3
+ARG BOOST_VERSION="1.89.0"
+ARG BOOST_VERSION_FILE="1_89_0"
 
-FROM debian:latest
-
-RUN apt-get -qq update && apt-get -qq -y install curl bzip2 \
-    && curl -sSL https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -o /tmp/miniconda.sh \
-    && bash /tmp/miniconda.sh -bfp /usr/local \
-    && rm -rf /tmp/miniconda.sh \
-    && conda install -y python=3 \
-    && conda update conda \
-    && apt-get -qq -y remove curl bzip2 \
-    && apt-get -qq -y autoremove \
-    && apt-get autoclean \
-    && rm -rf /var/lib/apt/lists/* /var/log/dpkg.log \
-    && conda clean --all --yes
-# end of continuumio/miniconda3
+FROM continuumio/miniconda3
 
 # install boost
+ARG BOOST_VERSION
+ARG BOOST_VERSION_FILE
 RUN apt-get update                  && \
     apt-get install -y curl gcc g++ && \
     mkdir /boost                    && \
     cd /boost                       && \
-    curl -L https://boostorg.jfrog.io/artifactory/main/release/1.81.0/source/boost_1_81_0.tar.gz --output boost_1_81_0.tar.gz && \
-    tar -xzf boost_1_81_0.tar.gz    && \
-    cd /boost/boost_1_81_0          && \
+    curl -L https://archives.boost.io/release/${BOOST_VERSION}/source/boost_${BOOST_VERSION_FILE}.tar.gz --output boost_${BOOST_VERSION_FILE}.tar.gz && \
+    tar -xzf boost_${BOOST_VERSION_FILE}.tar.gz    && \
+    cd /boost/boost_${BOOST_VERSION_FILE}          && \
     ./bootstrap.sh                  && \
     ./b2 install -d0 --without-wave --without-python && \
     cd /                            && \
